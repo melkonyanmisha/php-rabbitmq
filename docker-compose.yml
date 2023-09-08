@@ -1,0 +1,36 @@
+version: '3'
+services:
+  php-sender:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    restart: always
+    depends_on:
+      - mariadb
+      - rabbitmq
+    command: ["php", "/var/www/html/src/send_to_rabbitmq.php"]
+    volumes:
+      - ./src:/var/www/html/src
+    env_file:
+      - .env
+
+  mariadb:
+    image: mariadb:latest
+    hostname: mariadb
+    env_file:
+      - .env
+    ports:
+      - "3307:3306"
+    volumes:
+      - ./db:/docker-entrypoint-initdb.d
+      - ./schema.sql:/schema.sql
+
+  rabbitmq:
+    image: rabbitmq:3-management
+    container_name: rabbitmq
+    hostname: rabbitmq
+    ports:
+      - "15672:15672" # Map RabbitMQ management web UI port
+      - "5672:5672"   # Map RabbitMQ main port
+    env_file:
+      - .env
