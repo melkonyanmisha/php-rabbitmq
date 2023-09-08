@@ -22,7 +22,7 @@ try {
     // Get the current message count
     $messageInfo  = $channel->queue_declare($queueName, true);
     $messageCount = $messageInfo[1];
-    $maxMessages = getenv('TOTAL_MESSAGES_COUNT'); //todo@@@need to change
+    $maxMessages = getenv('TOTAL_MESSAGES_COUNT');
 
     if ($messageCount >= $maxMessages) {
         echo "Queue has reached the limit of $maxMessages messages. No more messages will be added.\n";
@@ -37,8 +37,8 @@ try {
             $created_at  = date('Y-m-d H:i:s');
             $messageBody = json_encode(['url' => $url, 'created_at' => $created_at]);
 
-            // Randomly choose a delay between 5 and 20 seconds
-            $delay = rand(5, 20);
+            // Randomly choose a delay between 5 and 30 seconds
+            $delay = rand(5, 30);
             sleep($delay);
 
             // Create a message with the URL and timestamp
